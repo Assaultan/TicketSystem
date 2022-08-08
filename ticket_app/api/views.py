@@ -26,7 +26,7 @@ class TicketCreate(APIView):
         if serializer.is_valid():
             serializer.save()
             # serializer.data['id']
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.data['id'], status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
