@@ -1,0 +1,5 @@
+manage.py/
+ticket_app/__pycache__/
+TicketSystem/__pycache__/
+user_app/__pycache__/
+ticket_app/migrations/

@@ -1,4 +1,5 @@
 from django.db import models
+from django.contrib.auth.models import User
 # from django.contrib.auth.models import User
 
 # Create your models here.
@@ -21,7 +22,7 @@ class Ticket(models.Model):
     priority = models.CharField(max_length=6,
             choices=PRIORITY_CHOICES,
             default="LOW")
-    # assignedTo = models.ForeignKey(User,on_delete=models.CASCADE)
+    assignedTo = models.ForeignKey(User,on_delete=models.CASCADE)
     createdAt = models.TimeField(auto_now_add=True)
 
     def __str__(self):
