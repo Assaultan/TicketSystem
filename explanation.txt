@@ -1,3 +1,7 @@
+Approach,Problem Faced and Solution:
+
+approch(models,serializers,urls,tokenization,views,permissions)
+
 1) First I created and linked the mongodb database
 
 2) applied migrations
@@ -53,10 +57,13 @@
 		then try except block 
 		here caused many problems querying data .written a query to count no. of priority marked High,
 		then applied the logic, if present more priority elements with same user.
+5)Finally wrote some custom permission for updating the ticket to close with object level permission.
+
+
 	
  			
 
 
-while adding ticket through admin throws error but works perfectly fine with api
+**while adding ticket through admin throws error but works perfectly fine with api
 
 		
