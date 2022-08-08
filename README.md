@@ -14,6 +14,9 @@ Run
 
 endpoints
 
+**Every endpoint requires Authorised Token except Creating User (/users/new/)
+
+
 to createuser
 /users/new/
 
