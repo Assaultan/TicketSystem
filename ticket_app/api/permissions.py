@@ -5,13 +5,14 @@ class IsAdminUser(permissions.IsAdminUser):
     def has_permission(self,request,view):
         return request.user.is_staff
 
+class IsUser(permissions.IsAdminUser):
+    def has_permission(self,request,view):
+        return request.user.is_authenticated
 
 class IsAdminOrUser(permissions.IsAdminUser):
 
+    def has_object_permission(self, request, view, obj):
+        return obj.assignedTo.user == request.user or request.user.is_staff
+
     def has_permission(self,request,view):
-        id=request.query_params.get('ticketID',None)
-        try:
-            obj = Ticket.objects.get(pk=id)
-        except Ticket.DoesNotExist:
-            return False
-        return obj.assignedTo==request.user
+        return request.user.is_authenticated or request.user.is_staff
