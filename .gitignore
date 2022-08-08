@@ -3,3 +3,4 @@ ticket_app/__pycache__/
 TicketSystem/__pycache__/
 user_app/__pycache__/
 ticket_app/migrations/
+ticket_app/api/__pycache__/
