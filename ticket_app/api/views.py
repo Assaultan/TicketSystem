@@ -22,11 +22,11 @@ class TicketCreate(APIView):
     serializer_class = TicketSerializer
     def post(self,request):
         serializer = TicketSerializer(data = request.data)
-        print(request.data)
+        # print(request.data)
         if serializer.is_valid():
-            serializer.save()
+            data=serializer.save()
             # serializer.data['id']
-            return Response(serializer.data['id'], status=status.HTTP_201_CREATED)
+            return Response(data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
