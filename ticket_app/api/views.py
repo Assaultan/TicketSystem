@@ -32,7 +32,7 @@ class TicketCreate(APIView):
             try:
                 serializer.save()
             except Exception:
-                return Response("error", status=status.HTTP_400_BAD_REQUEST)
+                return Response("Database error", status=status.HTTP_400_BAD_REQUEST)
                 # serializer.data['id']
             return Response(serializer.data['id'], status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -50,7 +50,7 @@ class TicketTitle(generics.ListAPIView):
 class TicketDelete(APIView):
     permission_classes = [IsAdminUser]
     def delete(self,request):
-        id=request.query_params.get('ticketID',None)
+        id=request.data['ticketID']
         try:
             ticket = Ticket.objects.get(pk=id)
         except Ticket.DoesNotExist:
@@ -58,7 +58,7 @@ class TicketDelete(APIView):
                               status=status.HTTP_404_NOT_FOUND)
         serializer = TicketSerializer(ticket)
         ticket.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        return Response("Deleted",status=status.HTTP_204_NO_CONTENT)
 
 
 
@@ -66,22 +66,27 @@ class TicketUpdate(APIView):
     permission_classes = [IsAdminOrUser]
     def post(self,request):
 
-        id=request.query_params.get('ticketId',None)
+        id=request.data['ticketID']
         try:
             ticket = Ticket.objects.get(pk=id)
         except Ticket.DoesNotExist:
             return Response({'Error': 'Ticket not found'},
                               status=status.HTTP_404_NOT_FOUND)
         
-        countHigh = Ticket.objects.filter(priority="high").count()
-
+        user = ticket.assignedTo
+        queryset = Ticket.objects.filter(assignedTo=user).filter(priority="high")
+        countHigh = queryset.count()
+        print(countHigh)
         if countHigh>=1:
             serializer = TicketSerializer(Ticket.objects.filter(priority="high"),many=True)
             return Response({'error':'A high priority task remains to be closed',
             'data':serializer.data},
             status=status.HTTP_400_BAD_REQUEST)
         else:
-            ticket.status="close"
-            ticket.save()
+            try:
+                ticket.status="close"
+                ticket.save()
+            except Exception:
+                return Response("Database Error")
             return Response("request closed", status=status.HTTP_202_ACCEPTED)
 
