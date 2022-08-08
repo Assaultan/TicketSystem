@@ -3,15 +3,18 @@ from rest_framework import serializers
 
 class RegistrationSerializer(serializers.ModelSerializer):
     role = serializers.CharField(style={'input_type':'role'},write_only=True)
-    username = serializers.CharField(style={'input_type':'username'},write_only=True)
+    # username = serializers.CharField(style={'input_type':'username'},write_only=True)
     class Meta:
         model = User
         fields = ['username','role']
+        extra_kwargs = {
+            'role' : {'write_only': True}
+        }
     def save(self):
         role=self.validated_data['role']
 
         if User.objects.filter(username=self.validated_data['username']).exists():
-            raise serializers.ValidationError({'error':'Email already exists!'})
+            raise serializers.ValidationError({'error':'Username already exists!'})
 
         account = User(username=self.validated_data['username'])
         

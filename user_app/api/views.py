@@ -14,26 +14,20 @@ def logout_view(request):
         return Response(status=status.HTTP_200_OK)
 
 
-
 @api_view(['POST',])
 def registration_view(request):
 
     if request.method == 'POST':
-        username=request.query_params.get('username',None)
-        role=request.query_params.get('role',None)
-        parameters={
-            'username':username,
-            'role':role
-        }
-        # return JsonResponse(data)
-        serializers = RegistrationSerializer(data=parameters )
-        data = {}
+        serializers = RegistrationSerializer(data = request.data)
+        data = {'role':request.data['role']}
         
         if serializers.is_valid():
             account = serializers.save()
 
             data['response'] = "Registration Succesfull"
             data['username'] = account.username
+            # data['role'] = account.role
+
             token = Token.objects.get(user=account).key
             data['token'] = token
         else:
@@ -45,7 +39,14 @@ def registration_view(request):
 # def registration_view(request):
 
 #     if request.method == 'POST':
-#         serializers = RegistrationSerializer(data = request.data)
+#         username=request.query_params.get('username',None)
+#         role=request.query_params.get('role',None)
+#         parameters={
+#             'username':username,
+#             'role':role
+#         }
+#         # return JsonResponse(data)
+#         serializers = RegistrationSerializer(data=parameters )
 #         data = {}
         
 #         if serializers.is_valid():
@@ -53,8 +54,6 @@ def registration_view(request):
 
 #             data['response'] = "Registration Succesfull"
 #             data['username'] = account.username
-#             data['email'] = account.email
-
 #             token = Token.objects.get(user=account).key
 #             data['token'] = token
 #         else:
