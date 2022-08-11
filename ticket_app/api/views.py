@@ -65,7 +65,7 @@ class TicketDelete(APIView):
 class TicketUpdate(APIView):
     permission_classes = [IsAdminOrUser]
     def post(self,request):
-
+        #not param
         id=request.data['ticketID']
         try:
             ticket = Ticket.objects.get(pk=id)
