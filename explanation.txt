@@ -1,0 +1,69 @@
+Approach,Problem Faced and Solution:
+
+approch(models,serializers,urls,tokenization,views,permissions)
+
+1) First I created and linked the mongodb database
+
+2) applied migrations
+	problem faced: database was not linking 
+	solution: installed pymongo version 3.12.1
+
+3) Created user_app for creating and generating token
+	i)problem: user without password
+	solution: searched internet found out user can be made without password
+			then written the required code
+	modified modelSerializers save method
+	for role I didn't created any group or role in django,
+	here if we pass the role admin then set user's is staff flag to two
+	to gain admin permissions else it will create normal user(employee)
+	 
+	ii)in user_app views returned the response of token and necessary errors
+	
+
+4)Created ticket_app written the model schema 	
+	i)Problem:- while creating models database and adding foreign key user
+			I was getting errors and database was getting corrupted
+	Solution:- created new project first created ticket model without user,
+			then added assignedTo as foreign key.
+	
+	ii)Serializing Tickets
+		Problem:- Model serializers were working fine but I was not able to accept
+		username with serializer char field, it was causing error fields(include all),
+		exclude with accountId. By default if we pass user id (assignedTo's user id) it was
+		working fine but we wanted username so after trying multiple times by overriding save
+		method used normal serializers. Defined all fields with priority and status to defaults
+		low and open respectively and if different variables(high/medium or close) assign it.
+	
+	Time of wasted:
+		validate_assignedTo was used to return instance of the user after querying the username
+		else validation error User does not exit
+	
+	Similarly defiined Update method(very much later at end)
+
+	iii)Comming to Views
+	a) listing tickets was easy with generic listapi view
+	b)creating ticket was tedious and it still has bug pointed in last
+		overwriting with generic create view was causing issues by mistakenly 
+		considered the body parameters as url params and wasted time with generic create views
+		finally used normal class based api view defined post request , normal flow, 
+		get data ,deserialize then if valid stored to database and return id of ticket.
+		this phases caused many problems had to overwrite serializer save methods, used noraml serializer,
+		then problem solved.
+	iv) Searching queries with title,priority and status was done by filter backends with django
+	v) Deleting Ticket, misread as url param wasted time then used class based views
+		used request.get('ticketID') then query then delete
+	vi)Updating was also a tedious task /tickets/markAsClosed endpoint which has to be post request not
+		patch so caused some issues...the did it similar to delete i.e getting the ticketID
+		then try except block 
+		here caused many problems querying data .written a query to count no. of priority marked High,
+		then applied the logic, if present more priority elements with same user.
+5)Finally wrote some custom permission for updating the ticket to close with object level permission.
+
+
+	
+ 			
+
+
+**while adding ticket through admin throws error but works perfectly fine with api
+
+		
